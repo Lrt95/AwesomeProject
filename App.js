@@ -9,13 +9,20 @@
 import React from 'react';
 import type {Node} from 'react';
 import {SafeAreaView} from 'react-native';
-import TabNavigator from "./navigation/tab-navigator";
+import TabNavigator from './navigation/tab-navigator';
+import {Provider} from 'react-redux';
+import {store, persistor} from './store/configure-store';
+import {PersistGate} from 'redux-persist/integration/react';
 
 const App: () => Node = () => {
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <TabNavigator />
-    </SafeAreaView>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <SafeAreaView style={{flex: 1}}>
+          <TabNavigator />
+        </SafeAreaView>
+      </PersistGate>
+    </Provider>
   );
 };
 

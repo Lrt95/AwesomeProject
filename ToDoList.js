@@ -6,38 +6,43 @@
  * @flow strict-local
  */
 
-import React, {useCallback, useMemo} from 'react';
+import React, { useCallback, useEffect, useMemo } from "react";
 import type {Node} from 'react';
 import {
   Button,
   FlatList,
   StyleSheet,
   Text,
-  TextInput, TouchableOpacity,
+  TextInput,
+  TouchableOpacity,
   View,
-} from "react-native";
+} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import {useDispatch, useSelector} from 'react-redux';
+import { addTodo, removeTodo } from "./store/reducer/todo-reducer";
 
 const ToDoList: () => Node = () => {
   const [listToDo, setListToDo] = React.useState([]);
   const [toDo, setToDo] = React.useState('');
   const [search, setSearch] = React.useState('');
+  const toDoList = useSelector(state => state.todoList.todoList);
+  const dispatch = useDispatch();
 
   const navigation = useNavigation();
 
+  useEffect(() => {
+    setListToDo(toDoList);
+  }, [toDoList]);
+
   const handleAdd = useCallback(() => {
-    const temp = [...listToDo];
-    temp.push(toDo);
-    setListToDo(temp);
-  }, [listToDo, toDo]);
+    dispatch(addTodo(toDo));
+  }, [dispatch, toDo]);
 
   const handleDelete = useCallback(
     index => {
-      const temp = [...listToDo];
-      temp.splice(index, 1);
-      setListToDo(temp);
+      dispatch(removeTodo(index));
     },
-    [listToDo],
+    [dispatch],
   );
 
   const toDoFiltered = useMemo(() => {
